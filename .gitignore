@@ -1,0 +1,2 @@
+*.ckpt
+OnlineChat/violence_check/train_logs/resnet50_pretrain_test/version_6/checkpoints/resnet50_pretrain_test-epoch=16-val_loss=0.06.ckpt

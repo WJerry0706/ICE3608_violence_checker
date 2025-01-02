@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Application</title>
+    <style>
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            background-color: #f1f1f1;
+        }
+
+        .contact-list {
+            width: 25%;
+            background-color: #ffffff;
+            border-right: 1px solid #ccc;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .search-form {
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .search-form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .contact-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .contact-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .contact-item.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .unread-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        .chat-box-container {
+            width: 75%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            max-height: 80vh;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+            clear: both;
+        }
+
+        .sent {
+            background-color: #007bff;
+            color: white;
+            text-align: right;
+            float: right;
+            border-top-right-radius: 0px;
+        }
+
+        .received {
+            background-color: #e1e1e1;
+            color: black;
+            text-align: left;
+            float: left;
+            border-top-left-radius: 0px;
+        }
+
+        .message-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .message-input textarea {
+            width: calc(100% - 100px);
+            height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .message-input button {
+            width: 100px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .message-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var chatBox = document.querySelector('.chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // 关闭轮询逻辑
+        });
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="contact-list">
+            <form class="search-form" id="searchForm" method="GET" action="{% url 'PrivateMessage:search_user' %}">
+                <input type="text" name="user_id" placeholder="搜索用户ID" required>
+                <button type="submit">搜索</button>
+            </form>
+
+            <ul class="list-group">
+                {% for contact in contact_users %}
+                <li class="list-group-item contact-item {% if contact.id == selected_user.id %}active{% endif %}">
+                    <a href="{% url 'PrivateMessage:conversation_with_user' current_user.id contact.id %}">
+                        {{ contact.username }}
+                    </a>
+                    {% if contact.unread_count > 0 %}
+                    <span class="unread-dot"></span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="chat-box-container">
+            {% if selected_user %}
+            <h4>Conversation with {{ selected_user.username }}</h4>
+            <div class="chat-box clearfix">
+                {% for message in messages %}
+                <div class="message {% if message.sender.id == current_user.id %}sent{% else %}received{% endif %}">
+                    {% if message.content %}
+                    <p>{{ message.content }}</p>
+                    {% endif %}
+                    {% if message.image %}
+                    <img src="{{ message.image.url }}" alt="Image" style="max-width: 200px;">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="message-input">
+                <form method="post" enctype="multipart/form-data" action="{% url 'PrivateMessage:conversation_with_user' current_user.id selected_user.id %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+            {% else %}
+            <p>Please select a user to start the conversation.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
