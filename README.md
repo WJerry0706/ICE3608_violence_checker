@@ -1,7 +1,9 @@
 运行网站命令：
 
 `python manage.py makemigrations
+
 python manage.py migrate
+
 python manage.py runserver`
 
 .ckpt文件传到了交大云盘中: [[https://jbox.sjtu.edu.cn/v/list/self/1804178151677366278](https://jbox.sjtu.edu.cn/l/w1gOPw)](https://jbox.sjtu.edu.cn/l/hHo876)
