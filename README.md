@@ -4,7 +4,7 @@
 python manage.py migrate
 python manage.py runserver`
 
-.ckpt文件由于传不下了,又不好放huggingface,就传到了交大云盘中: [https://jbox.sjtu.edu.cn/v/list/self/1804178151677366278](https://jbox.sjtu.edu.cn/l/w1gOPw)
+.ckpt文件传到了交大云盘中: [[https://jbox.sjtu.edu.cn/v/list/self/1804178151677366278](https://jbox.sjtu.edu.cn/l/w1gOPw)](https://jbox.sjtu.edu.cn/l/hHo876)
 
 下载完`resnet50_pretrain_test-epoch=16-val_loss=0.06.ckpt`文件后,放到`train_logs/resnet50_pretrain_test/version_6/checkpoints`目录下.
 
